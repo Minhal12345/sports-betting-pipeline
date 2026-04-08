@@ -17,7 +17,7 @@ def fetch_odds(
     regions: str = "us",
     markets: str = "h2h",
 ) -> list[dict[str, Any]]:
-    """Return odds JSON for the given sport key (e.g. americanfootball_nfl)."""
+    """Return odds JSON for the given sport key (e.g. basketball_nba)."""
     if not ODDS_API_KEY:
         raise ValueError("ODDS_API_KEY is not set")
 
@@ -34,8 +34,13 @@ def fetch_odds(
 
 
 def main() -> None:
-    data = fetch_odds("americanfootball_nfl")
-    print(json.dumps(data[:1], indent=2) if data else "[]")
+    data = fetch_odds("basketball_nba")
+    print(f"Games returned: {len(data)}")
+    if data:
+        print("Sample (first game):")
+        print(json.dumps(data[0], indent=2))
+    else:
+        print("No games in response.")
 
 
 if __name__ == "__main__":
