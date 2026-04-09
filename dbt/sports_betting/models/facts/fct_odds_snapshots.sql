@@ -21,10 +21,10 @@ select
     bookmaker_key,
     team,
     odds,
-    snapshot_time,
+    to_timestamp(snapshot_time, 'yyyyMMdd\'T\'HHmmss\'Z\'') as snapshot_time,
     commence_time
 from {{ ref("stg_odds_snapshots") }}
 
 {% if is_incremental() %}
-where snapshot_time > (select coalesce(max(snapshot_time), to_timestamp('1970-01-01')) from {{ this }})
+where to_timestamp(snapshot_time, 'yyyyMMdd\'T\'HHmmss\'Z\'') > (select coalesce(max(snapshot_time), to_timestamp('1970-01-01')) from {{ this }})
 {% endif %}
