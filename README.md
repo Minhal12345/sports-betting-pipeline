@@ -69,6 +69,7 @@ High-level flow from ingestion through consumption:
 ---
 
 ## Data Model (Gold)
+![dbt Lineage Graph](docs/lineage.png)
 
 The **Gold** layer is implemented as dbt models (see `dbt/sports_betting/models/`). At a glance:
 
