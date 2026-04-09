@@ -1,6 +1,6 @@
 # Sports Betting Odds Data Pipeline
 
-This repository is an **end-to-end data engineering portfolio project**: it ingests live sports betting odds from a public API, lands raw data in cloud object storage, refines it through a medallion-style lakehouse on Databricks, and exposes curated **Gold** analytics models through **dbt Core** against **Unity Catalog**. The goal is to demonstrate how modern batch pipelines combine orchestration, lakehouse patterns, and governed analytics—skills that translate directly to production analytics platforms.
+This repository is an **end-to-end data engineering portfolio project**: it ingests live sports betting odds from a public API, lands raw data in cloud object storage, refines it through a medallion-style lakehouse on Databricks, and exposes curated **Gold** analytics models through **dbt Core** against **Unity Catalog**. The goal is to demonstrate how modern batch pipelines combine orchestration, lakehouse patterns, and governed analytics; skills that translate directly to production analytics platforms.
 
 ---
 
