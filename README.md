@@ -139,6 +139,3 @@ Parts of this project were built faster with **Cursor** and **Claude** as coding
 
 ---
 
-## License
-
-Use and extend this project for learning and portfolio purposes; respect the Odds API and AWS terms of use for your own keys and workloads.
