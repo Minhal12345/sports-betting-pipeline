@@ -20,7 +20,7 @@ select
     away_team,
     bookmaker_key,
     team,
-    odds,
+    cast(odds as double) as odds,
     to_timestamp(snapshot_time, 'yyyyMMdd\'T\'HHmmss\'Z\'') as snapshot_time,
     commence_time
 from {{ ref("stg_odds_snapshots") }}
