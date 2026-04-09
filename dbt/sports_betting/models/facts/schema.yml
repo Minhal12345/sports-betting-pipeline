@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: fct_odds_snapshots
+    description: Incremental fact of odds snapshots (one row per staging grain).
+    columns:
+      - name: snapshot_id
+        description: Surrogate key from game, bookmaker, team, snapshot_time, and market.
+        data_tests:
+          - unique
+          - not_null
+      - name: game_id
+        data_tests:
+          - not_null
+      - name: snapshot_time
+        data_tests:
+          - not_null
