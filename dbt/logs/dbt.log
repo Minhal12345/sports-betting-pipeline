@@ -1,0 +1,34 @@
+[0m20:08:34.087060 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b8e1fa0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b265490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b8e2030>]}
+
+
+============================== 20:08:34.089939 | ce664775-34cc-4dec-81b7-b664e1f1a890 ==============================
+[0m20:08:34.089939 [info ] [MainThread]: Running with dbt=1.11.6
+[0m20:08:34.090320 [debug] [MainThread]: running dbt with arguments {'log_cache_events': 'False', 'partial_parse': 'True', 'printer_width': '80', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'use_colors': 'True', 'use_experimental_parser': 'False', 'send_anonymous_usage_stats': 'True', 'target_path': 'None', 'fail_fast': 'False', 'invocation_command': 'dbt init sports_betting', 'debug': 'False', 'indirect_selection': 'eager', 'static_parser': 'True', 'profiles_dir': '/Users/minhalimran/.dbt', 'introspect': 'True', 'log_path': 'logs', 'cache_selected_only': 'False', 'log_format': 'default', 'warn_error': 'None', 'empty': 'None', 'write_json': 'True', 'quiet': 'False'}
+[0m20:08:34.110943 [info ] [MainThread]: Creating dbt configuration folder at /Users/minhalimran/.dbt
+[0m20:08:34.112491 [debug] [MainThread]: Starter project path: /Users/minhalimran/sports-betting-pipeline/.venv/lib/python3.12/site-packages/dbt/include/starter_project
+[0m20:08:34.116806 [info ] [MainThread]: 
+Your new dbt project "sports_betting" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m20:08:34.116995 [info ] [MainThread]: Setting up your profile.
+[0m20:09:00.407372 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m20:09:00.407907 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m20:09:00.408091 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m20:14:38.652980 [info ] [MainThread]: Profile sports_betting written to /Users/minhalimran/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m20:14:39.080526 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 365.0382, "process_in_blocks": "0", "process_kernel_time": 0.383611, "process_mem_max_rss": "213614592", "process_out_blocks": "0", "process_user_time": 1.464577}
+[0m20:14:39.083504 [debug] [MainThread]: Command `dbt init` succeeded at 20:14:39.083372 after 365.04 seconds
+[0m20:14:39.084531 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b265490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1138e6570>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x112c99790>]}
+[0m20:14:39.084959 [debug] [MainThread]: Flushing usage events
+[0m20:14:39.393885 [debug] [MainThread]: An error was encountered while trying to flush usage events
