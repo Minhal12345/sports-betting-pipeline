@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: dim_teams
+    description: SCD Type 2 team dimension (current rows; valid_to null / is_current true until versioning is extended).
+    columns:
+      - name: team_key
+        description: Surrogate key (stable for sport_key + team_name in this implementation).
+        data_tests:
+          - unique
+          - not_null
+      - name: team_name
+        data_tests:
+          - not_null
+      - name: sport_key
+        data_tests:
+          - not_null
+
+  - name: dim_bookmakers
+    description: SCD Type 1 bookmaker dimension (latest title per key).
+    columns:
+      - name: bookmaker_key
+        data_tests:
+          - unique
+          - not_null
+      - name: bookmaker_title
+        data_tests:
+          - not_null
+      - name: is_active
+        data_tests:
+          - not_null
+
+  - name: dim_date
+    description: Calendar date spine.
+    columns:
+      - name: date_day
+        data_tests:
+          - unique
+          - not_null
+      - name: day_of_week
+        data_tests:
+          - not_null
+      - name: month
+        data_tests:
+          - not_null
+      - name: quarter
+        data_tests:
+          - not_null
+      - name: year
+        data_tests:
+          - not_null

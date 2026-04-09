@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_odds_snapshots
+    description: Staging odds snapshots (sample VALUES until connected to bronze source).
+    columns:
+      - name: stg_odds_snapshot_id
+        description: Surrogate row id for the staging grain (one row per game / bookmaker / team / snapshot).
+        data_tests:
+          - unique
+          - not_null
+      - name: game_id
+        data_tests:
+          - not_null
+      - name: snapshot_time
+        data_tests:
+          - not_null

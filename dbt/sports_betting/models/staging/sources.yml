@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: bronze_odds
+    description: >
+      Placeholder source for raw odds landed in Unity Catalog (e.g. from S3 / Auto Loader).
+      stg_odds_snapshots currently uses inline sample data; point this source at your bronze table when ready.
+    database: sports_betting
+    schema: bronze
+    tables:
+      - name: odds_snapshots
+        description: Raw odds snapshot records (JSON or flattened) from the ingestion pipeline.
+        columns:
+          - name: game_id
+            description: Provider game identifier

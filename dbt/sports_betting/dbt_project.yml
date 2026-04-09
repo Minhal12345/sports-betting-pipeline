@@ -1,0 +1,25 @@
+name: "sports_betting"
+version: "1.0.0"
+profile: "sports_betting"
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  sports_betting:
+    +catalog: sports_betting
+    +schema: gold
+    staging:
+      +materialized: view
+    dimensions:
+      +materialized: table
+    facts:
+      +materialized: table
