@@ -6,9 +6,7 @@ import io
 import json
 from typing import Any
 
-import boto3
 import pandas as pd
-from botocore.exceptions import ClientError
 
 from ingestion.config import S3_BUCKET_NAME
 from ingestion.upload_to_s3 import get_s3_client
@@ -44,17 +42,20 @@ def list_keys_with_suffix(client: Any, *, bucket: str, prefix: str, suffix: str)
     return keys
 
 
-def silver_object_exists(client: Any, *, bucket: str, key: str) -> bool:
-    try:
-        client.head_object(Bucket=bucket, Key=key)
-        return True
-    except ClientError as e:
-        if e.response.get("ResponseMetadata", {}).get("HTTPStatusCode") == 404:
-            return False
-        code = e.response.get("Error", {}).get("Code", "")
-        if code in ("404", "NoSuchKey", "NotFound"):
-            return False
-        raise
+SILVER_COLUMNS = [
+    "game_id",
+    "sport_key",
+    "sport_title",
+    "commence_time",
+    "home_team",
+    "away_team",
+    "bookmaker_key",
+    "bookmaker_title",
+    "market_key",
+    "team",
+    "odds",
+    "snapshot_time",
+]
 
 
 def flatten_odds_json(payload: Any, snapshot_time: str) -> list[dict[str, Any]]:
@@ -122,7 +123,7 @@ def process_bronze_object(
     body = obj["Body"].read()
     payload = json.loads(body.decode("utf-8"))
     rows = flatten_odds_json(payload, snapshot_time)
-    df = pd.DataFrame(rows)
+    df = pd.DataFrame(rows, columns=SILVER_COLUMNS)
     buf = io.BytesIO()
     df.to_parquet(buf, index=False, engine="pyarrow")
     buf.seek(0)
@@ -149,7 +150,7 @@ def run_transform() -> int:
         sk = bronze_to_silver_key(bk)
         if sk is None:
             continue
-        if sk not in silver_keys and not silver_object_exists(client, bucket=bucket, key=sk):
+        if sk not in silver_keys:
             to_process.append(bk)
 
     processed = 0
