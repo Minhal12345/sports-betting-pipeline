@@ -38,24 +38,18 @@ jobs:
           BODY=$(jq -n \
             --arg path "$NOTEBOOK_PATH" \
             '{
-              run_name: "ingest_odds_workflow_bronze_to_silver",
+              run_name: "bronze_to_silver",
               tasks: [
                 {
                   task_key: "bronze_to_silver",
-                  notebook_task: { notebook_path: $path },
-                  new_cluster: {
-                    spark_version: "15.4.x-scala2.12",
-                    node_type_id: "i3.xlarge",
-                    data_security_mode: "SINGLE_USER",
-                    num_workers: 0,
-                    spark_conf: {
-                      "spark.databricks.cluster.profile": "singleNode",
-                      "spark.master": "local[*]"
-                    },
-                    custom_tags: { ResourceClass: "SingleNode" }
-                  }
+                  notebook_task: {
+                    notebook_path: $path,
+                    source: "WORKSPACE"
+                  },
+                  compute_key: "serverless"
                 }
-              ]
+              ],
+              use_serverless: true
             }')
 
           RESP=$(curl -sS -X POST "$HOST/api/2.1/jobs/runs/submit" \
