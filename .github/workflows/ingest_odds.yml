@@ -98,6 +98,7 @@ jobs:
       - name: dbt run and test
         working-directory: dbt/sports_betting
         env:
+          DBT_PROFILES_DIR: ${{ github.workspace }}/dbt/sports_betting
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
