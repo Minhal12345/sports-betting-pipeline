@@ -26,3 +26,83 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         run: python -m ingestion.upload_to_s3
+
+      - name: Run Databricks notebook (bronze to silver)
+        env:
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          set -euo pipefail
+          HOST="https://dbc-44113c87-a267.cloud.databricks.com"
+          NOTEBOOK_PATH="/Workspace/Users/mmimran@uwaterloo.ca/01_bronze_to_silver"
+
+          BODY=$(jq -n \
+            --arg path "$NOTEBOOK_PATH" \
+            '{
+              run_name: "ingest_odds_workflow_bronze_to_silver",
+              tasks: [
+                {
+                  task_key: "bronze_to_silver",
+                  notebook_task: { notebook_path: $path },
+                  new_cluster: {
+                    spark_version: "15.4.x-scala2.12",
+                    node_type_id: "i3.xlarge",
+                    data_security_mode: "SINGLE_USER",
+                    num_workers: 0,
+                    spark_conf: {
+                      "spark.databricks.cluster.profile": "singleNode",
+                      "spark.master": "local[*]"
+                    },
+                    custom_tags: { ResourceClass: "SingleNode" }
+                  }
+                }
+              ]
+            }')
+
+          RESP=$(curl -sS -X POST "$HOST/api/2.1/jobs/runs/submit" \
+            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$BODY")
+          RUN_ID=$(echo "$RESP" | jq -r '.run_id // empty')
+          if [[ -z "$RUN_ID" || "$RUN_ID" == "null" ]]; then
+            echo "Failed to submit Databricks run:"
+            echo "$RESP" | jq .
+            exit 1
+          fi
+          echo "Submitted run_id=$RUN_ID"
+
+          while true; do
+            STATUS_JSON=$(curl -sS -G "$HOST/api/2.1/jobs/runs/get" \
+              -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+              --data-urlencode "run_id=$RUN_ID")
+            LC=$(echo "$STATUS_JSON" | jq -r '.state.life_cycle_state // empty')
+            RS=$(echo "$STATUS_JSON" | jq -r '.state.result_state // empty')
+            echo "life_cycle_state=$LC result_state=$RS"
+            case "$LC" in
+              TERMINATED)
+                if [[ "$RS" == "SUCCESS" ]]; then
+                  exit 0
+                fi
+                echo "Notebook run did not succeed (result_state=$RS):"
+                echo "$STATUS_JSON" | jq .
+                exit 1
+                ;;
+              INTERNAL_ERROR|SKIPPED)
+                echo "Notebook run failed (life_cycle_state=$LC):"
+                echo "$STATUS_JSON" | jq .
+                exit 1
+                ;;
+            esac
+            sleep 30
+          done
+
+      - name: dbt run and test
+        working-directory: dbt/sports_betting
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+        run: |
+          set -euo pipefail
+          pip install dbt-core dbt-databricks
+          dbt run
+          dbt test
